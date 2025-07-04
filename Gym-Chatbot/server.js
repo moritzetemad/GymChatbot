@@ -85,8 +85,9 @@ io.on('connection', (socket) => {
   })
 })
 
-const PORT = process.env.PORT || 8081
-server.listen(PORT, () => {
-  console.log(`Server läuft auf http://localhost:${PORT}`)
-})
+const port = process.env.PORT || 3000;
+server.listen(port, () => {
+  console.log(`Server läuft auf Port ${port}`);
+});
+
 
