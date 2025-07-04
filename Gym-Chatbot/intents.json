@@ -1,0 +1,39 @@
+{
+  "intents": [
+    {
+      "name": "Beine",
+      "keywords": ["beine", "bein", "oberschenkel"],
+      "answers": ["Beine trainierst du z.B. mit Kniebeugen, Ausfallschritten und Beinpresse."]
+    },
+    {
+      "name": "Brust",
+      "keywords": ["brust", "brustmuskeln"],
+      "answers": ["Für die Brust eignen sich Bankdrücken, Liegestütze und Kurzhantelfliegen."]
+    },
+    {
+      "name": "Rücken",
+      "keywords": ["rücken", "lats", "rückseite"],
+      "answers": ["Rückenübungen: Rudern, Kreuzheben, Klimmzüge."]
+    },
+    {
+      "name": "Bauch",
+      "keywords": ["bauch", "core", "sixpack"],
+      "answers": ["Für den Bauch: Planks, Crunches, Leg Raises."]
+    },
+    {
+      "name": "Trainingsplan",
+      "keywords": ["plan", "trainingsplan", "zusammenstellen", "workout"],
+      "answers": ["Lass uns deinen Plan gemeinsam erstellen."]
+    },
+    {
+      "name": "Fragen",
+      "keywords": ["frage", "fragen", "info", "wissen", "antwort"],
+      "answers": ["Stell mir gerne deine Frage zum Training."]
+    },
+    {
+      "name": "Fallback",
+      "keywords": [],
+      "answers": ["Das habe ich nicht verstanden. Bitte versuche es anders."]
+    }
+  ]
+}

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GymGPT</title>
+
+  <link href="css/style.css" rel="stylesheet" />
+  <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet" />
+
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+</head>
+<body class="bg-funky">
+  <div class="container">
+    <div class="messaging">
+      <div class="inbox_msg">
+        <div class="mesgs">
+          <div id="msg_history" class="msg_history"></div>
+          <div class="type_msg">
+            <form id="chatForm" class="input_msg_write">
+              <input id="msgInput" type="text" class="write_msg" placeholder="Nachricht eingeben..." autocomplete="off" />
+              <button class="msg_send_btn" type="submit"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    $(function () {
+      const socket = io();
+      const username = "user" + Math.floor(Math.random() * 1000);
+
+      function appendMessage(text, sender, isOutgoing) {
+        const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        let msgHtml = '';
+
+        if (isOutgoing) {
+          msgHtml = `
+            <div class="outgoing_msg">
+              <div class="sent_msg">
+                <p>${text}</p>
+                <span class="time_date">${time} | Du</span>
+              </div>
+            </div>`;
+        } else {
+          msgHtml = `
+            <div class="incoming_msg">
+              <div class="incoming_msg_img">
+                <img src="https://ptetutorials.com/images/user-profile.png" alt="${sender}">
+              </div>
+              <div class="received_msg">
+                <div class="received_withd_msg">
+                  <p>${text}</p>
+                  <span class="time_date">${time} | ${sender}</span>
+                </div>
+              </div>
+            </div>`;
+        }
+
+        $('#msg_history').append(msgHtml);
+        $('#msg_history').scrollTop($('#msg_history')[0].scrollHeight);
+      }
+
+      socket.on('connect', () => {
+        socket.emit('join', { name: username });
+      });
+
+      $('#chatForm').on('submit', function (e) {
+        e.preventDefault();
+        const message = $('#msgInput').val().trim();
+        if (!message) return;
+
+        appendMessage(message, username, true);
+        socket.emit('msg', { msg: message, sender: username });
+        $('#msgInput').val('');
+      });
+
+      socket.on('message', (data) => {
+        if (data.type === 'msg') {
+          // Zeige alle Bot-Nachrichten an, egal wer sender ist
+          const isOutgoing = data.sender === username;
+          appendMessage(data.msg, data.name, !isOutgoing);
+        }
+      });
+    });
+  </script>
+</body>
+</html>
