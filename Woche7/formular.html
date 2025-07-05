@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+       <head>
+              <title>Grundlagen Internet Technologies</title>
+              
+       </head>
+       <body>
+              <hr><center>
+              <h2>Grundlagen</h2>
+              <h3>Javascript Forms</h3>
+
+              <script language="JavaScript1.5"></script>
+              <script type="text/javascript"></script> 
+<!--Kommentar-->
+              <script>
+                     function sende(){
+                            var vn = document.getElementById("Vorname").value;
+                            var nn = document.getElementById("Zuname").value;
+                            var pw = document.getElementById("Passwort").value;
+                            alert("Vorname: " + vn + "   Zuname: " + nn+ "    Passwort: " + pw);
+                     }       
+             
+              </script>
+
+
+              <form id ="person">
+                     <label class ="h2"
+                     form ="person">Namenseingabe</label>
+                     <br>
+
+                     <label for ="Vorname">Vorname :</label>
+                     <input type = "text" name="Vorname"
+                     id="Vorname">
+                     <br>
+
+                     <label for ="Zuname">Zuname :</label>
+                     <input type = "text" name="Zuname"
+                     id="Zuname">
+                     <br>
+
+                     <label for ="Passwort">Passwort :</label>
+                     <input type = "password" name="Passwort"
+                     id="Passwort">
+                     <br>
+
+                     <button onclick="sende()">Eingaben absenden</button>
+
+              </form>
+
+
+
+<a href="javascript:window.close()">Fenster schliessen</a>
+       </body>
+</html>

@@ -1,0 +1,81 @@
+<html>
+<head>
+    <script src="/js/jquery.js"></script>
+    <script src="/socket.io/socket.io.js"></script> 
+</head>
+<body>
+    <div id="msgs" style="height:400px; width:400px; overflow: scroll; float:left;"></div>
+    <div id="users" style="height:400px; width:100px; overflow: scroll;"></div>
+
+    <form id="chatForm">
+        <label for="msg">u1:&nbsp;</label>
+        <input id="msg" type="text"/>
+        <button type="submit">Senden</button>
+    </form>
+
+     <script>
+        const socket = io('http://localhost:8081');
+        const name = "name" + Math.floor(Math.random() * 700);
+
+        const form = document.getElementById('chatForm');
+        const input = document.getElementById('msg');
+        const msgs = document.getElementById('msgs');
+        const usersDiv = document.getElementById('users');
+
+        socket.on('connect', () => {
+            socket.emit('join', { name });
+        });
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const text = input.value.trim();
+            if (text === '') return;
+
+            socket.emit('msg', { msg: text, sender: name });
+            input.value = '';
+        });
+
+        socket.on('message', (data) => {
+            switch (data.type) {
+                case 'msg':
+                    if (
+                        data.name === name ||
+                        (data.name === "Rick" && data.sender === name)
+                    ) {
+                        appendMessage(`${data.name}: ${data.msg}`);
+                    }
+                    break;
+
+                case 'join':
+                    appendMessage(`${data.msg.name} ist dem Chat beigetreten.`);
+                    updateUsers(data.names);
+                    break;
+
+                case 'leave':
+                    appendMessage(`${data.name} hat den Chat verlassen.`);
+                    updateUsers(data.names);
+                    break;
+
+                default:
+                    console.warn('Unbekannter Nachrichtentyp:', data);
+            }
+        });
+
+        function appendMessage(text) {
+            const msgDiv = document.createElement('div');
+            msgDiv.textContent = text;
+            msgs.appendChild(msgDiv);
+            msgs.scrollTop = msgs.scrollHeight;
+        }
+
+        function updateUsers(userList) {
+            usersDiv.innerHTML = '';
+            userList.forEach(user => {
+                const userDiv = document.createElement('div');
+                userDiv.textContent = user;
+                usersDiv.appendChild(userDiv);
+            });
+        }
+    </script>
+</body>
+</html>
