@@ -1,7 +1,7 @@
 {
   "name": "gym-chatbot",
   "version": "1.0.0",
-  "description": "Ein Gym-Chatbot mit Express und Socket.IO",
+  "description": "Internettchnologien-Projekt - Chatbot",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"

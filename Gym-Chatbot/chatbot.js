@@ -8,9 +8,7 @@ class ChatBot {
     this.planData = {}
   }
 
-  async init() {
-    // Platzhalter falls async Initialisierung benötigt wird
-  }
+  async init() {}
 
   findIntent(input) {
     const text = input.toLowerCase()
@@ -27,7 +25,15 @@ class ChatBot {
 
     if (text === '') {
       this.state = 'waiting_for_choice'
-      return 'Willkommen! Möchtest du einen Trainingsplan erstellen oder Fragen stellen?'
+      return 'Hey Buddy! Möchtest du einen Trainingsplan erstellen oder Fragen zum Thema Fitness stellen?'
+    }
+
+    const planIntent = this.findIntent(text) === 'Trainingsplan'
+
+    if (this.state === 'fragen_flow' && planIntent) {
+      this.state = 'plan_ask_frequency'
+      this.planData = {}
+      return 'Okay! Wie oft pro Woche möchtest du trainieren?'
     }
 
     if (this.state === 'start') {
@@ -41,14 +47,14 @@ class ChatBot {
       if (intent === 'Trainingsplan') {
         this.state = 'plan_ask_frequency'
         this.fallbackCount = 0
-        this.planData = {} // Reset Plan-Daten
+        this.planData = {}
         return 'Wie oft pro Woche möchtest du trainieren? (z.B. 3)'
       }
 
       if (intent === 'Fragen') {
         this.state = 'fragen_flow'
         this.fallbackCount = 0
-        return 'Stelle mir deine Frage zum Training.'
+        return 'Stelle mir deine Frage zum Thema Fitness.'
       }
 
       this.fallbackCount++
@@ -57,34 +63,33 @@ class ChatBot {
         this.fallbackCount = 0
         return 'Ich verstehe dich leider nicht. Lass uns von vorne anfangen. Möchtest du einen Trainingsplan erstellen oder Fragen stellen?'
       }
+
       return 'Bitte antworte mit "Trainingsplan" oder "Fragen".'
     }
 
-    // Trainingsplan flow mit Fragen zur Häufigkeit, Dauer, Intensität, Körpergruppen
     if (this.state.startsWith('plan_')) {
       return this.handlePlanFlow(text)
     }
 
     if (this.state === 'fragen_flow') {
-      // Intents anhand Keywords erkennen und Antworten geben
       const intent = this.findIntent(text)
-      const foundIntent = this.intents.find(i => i.name === intent)
-      if (foundIntent && foundIntent.answers.length > 0 && intent !== 'Fallback') {
-        return foundIntent.answers[0]
+      const found = this.intents.find(i => i.name === intent)
+      if (found && found.answers.length > 0 && intent !== 'Fallback') {
+        return found.answers[0]
       } else {
-        return 'Das habe ich leider nicht verstanden. Kannst du deine Frage anders formulieren?'
+        return 'Das habe ich nicht verstanden. Kannst du es anders formulieren?'
       }
     }
 
-    return 'Entschuldige, da ist etwas schiefgelaufen.'
+    return 'Sorry, da ist etwas schiefgelaufen.'
   }
 
   handlePlanFlow(text) {
-    switch(this.state) {
+    switch (this.state) {
       case 'plan_ask_frequency':
         const freq = parseInt(text)
         if (isNaN(freq) || freq < 1 || freq > 7) {
-          return 'Bitte gib eine Zahl zwischen 1 und 7 für die Trainingstage pro Woche ein.'
+          return 'Bitte gib eine Zahl zwischen 1 und 7 an.'
         }
         this.planData.frequency = freq
         this.state = 'plan_ask_duration'
@@ -101,77 +106,118 @@ class ChatBot {
 
       case 'plan_ask_intensity':
         if (!['leicht', 'mittel', 'hart'].includes(text)) {
-          return 'Bitte gib "leicht", "mittel" oder "hart" als Intensität an.'
+          return 'Bitte gib "leicht", "mittel" oder "hart" an.'
         }
         this.planData.intensity = text
         this.planData.days = []
         this.currentDay = 1
         this.state = 'plan_ask_bodypart'
-        return `Für Tag ${this.currentDay} - Welche Körpergruppe möchtest du trainieren? (z.B. Beine, Brust, Rücken, Bauch)`
+        return `Für Tag ${this.currentDay} - welche Körpergruppen möchtest du trainieren? (z. B. Brust, Beine )`
 
       case 'plan_ask_bodypart':
-        const validBodyparts = ['beine', 'brust', 'rücken', 'bauch']
-        if (!validBodyparts.includes(text)) {
-          return `Bitte gib eine gültige Körpergruppe an: ${validBodyparts.join(', ')}`
+        const parts = text.split(',').map(p => p.trim().toLowerCase())
+        const valid = ['beine', 'brust', 'rücken', 'bauch', 'bizeps', 'trizeps', 'schultern']
+        if (!parts.every(p => valid.includes(p))) {
+          return `Bitte gib gültige Körpergruppen an (durch Komma getrennt): ${valid.join(', ')}`
         }
-        this.planData.days.push({ day: this.currentDay, bodypart: text })
+
+        this.planData.days.push({ day: this.currentDay, bodyparts: parts })
 
         if (this.currentDay < this.planData.frequency) {
           this.currentDay++
-          return `Für Tag ${this.currentDay} - Welche Körpergruppe möchtest du trainieren?`
+          return `Für Tag ${this.currentDay} - welche Körpergruppen möchtest du trainieren?`
         } else {
           this.state = 'plan_complete'
           return this.generatePlan()
         }
 
       case 'plan_complete':
-        // Nach Plan-Ausgabe fragen ob neu starten oder beenden
-        if (['ja', 'neu', 'ändern', 'ändern'].includes(text)) {
+        if (['ja', 'neu', 'ändern'].includes(text)) {
           this.state = 'plan_ask_frequency'
           this.planData = {}
           return 'Wie oft pro Woche möchtest du trainieren?'
-        } 
+        }
         if (['nein', 'fertig', 'stop', 'ende'].includes(text)) {
           this.state = 'start'
           this.planData = {}
-          return 'Alles klar, wenn du wieder einen Plan möchtest oder Fragen hast, sag Bescheid!'
+          return 'Alles klar. Sag Bescheid, wenn du wieder starten willst.'
         }
-        return 'Möchtest du den Plan ändern? Antworte mit "ja" für neu erstellen oder "nein" zum Beenden.'
+        return 'Möchtest du den Plan ändern? Antworte mit "ja" oder "nein".'
 
       default:
         this.state = 'start'
-        return 'Da ist etwas schiefgelaufen. Lass uns von vorne beginnen. Möchtest du einen Trainingsplan erstellen oder Fragen stellen?'
+        return 'Da ist etwas schiefgelaufen. Lass uns neu anfangen.'
     }
   }
 
   generatePlan() {
     const { frequency, duration, intensity, days } = this.planData
-    let planText = `Dein Trainingsplan für ${frequency} Tage pro Woche, ${duration} Minuten pro Einheit, Intensität: ${intensity}.\n\n`
+    const messages = []
+
+    messages.push(`Dein Trainingsplan für ${frequency} Tage/Woche, ${duration} Minuten pro Einheit, Intensität: ${intensity}.`)
 
     for (const day of days) {
-      let exercises = ''
-      switch(day.bodypart) {
-        case 'beine':
-          exercises = 'Kniebeugen, Ausfallschritte, Beinpresse'
-          break
-        case 'brust':
-          exercises = 'Bankdrücken, Liegestütze, Kurzhantelfliegen'
-          break
-        case 'rücken':
-          exercises = 'Rudern, Kreuzheben, Klimmzüge'
-          break
-        case 'bauch':
-          exercises = 'Planks, Crunches, Leg Raises'
-          break
-        default:
-          exercises = 'Allgemeines Ganzkörpertraining'
+      let block = `\nTag ${day.day} (${day.bodyparts.join(', ')}):\n`
+      for (const part of day.bodyparts) {
+        const exercises = this.getExercisesFor(part, intensity)
+        block += `  ${this.capitalize(part)}:\n    ${exercises.join('\n    ')}\n`
       }
-      planText += `Tag ${day.day} (${day.bodypart}): ${exercises}\n`
+      messages.push(block)
     }
 
-    planText += '\nMöchtest du den Plan ändern? Antworte mit "ja" für neu erstellen oder "nein" zum Beenden.'
+    messages.push('Möchtest du den Plan ändern? Antworte mit "ja" oder "nein".')
+    return messages
+  }
 
-    return planText
+  getExercisesFor(bodypart, intensity) {
+    const plans = {
+      beine: {
+        leicht: ['Beinheben', 'Wandsitzen'],
+        mittel: ['Kniebeugen', 'Ausfallschritte'],
+        hart: ['Beinpresse', 'Bulgarian Split Squats', 'Jump Squats']
+      },
+      brust: {
+        leicht: ['Armheben', 'Wand-Liegestütze'],
+        mittel: ['Liegestütze', 'Kurzhantelfliegen'],
+        hart: ['Bankdrücken', 'Dips', 'Negativ-Liegestütze']
+      },
+      rücken: {
+        leicht: ['Superman', 'Bird-Dog'],
+        mittel: ['Rudern mit Band', 'Kreuzheben leicht'],
+        hart: ['Klimmzüge', 'Langhantel-Rudern', 'Kreuzheben schwer']
+      },
+      bauch: {
+        leicht: ['Crunches', 'Beinheben'],
+        mittel: ['Planks', 'Russian Twists'],
+        hart: ['Dragon Flags', 'Weighted Sit-Ups', 'Hanging Leg Raises']
+      },
+      arme: {
+        leicht: ['Bizeps-Curls mit Wasserflaschen', 'Trizeps-Strecken ohne Gewicht'],
+        mittel: ['Kurzhantel-Curls', 'Dips an der Bank'],
+        hart: ['Langhantel-Curls', 'Enges Bankdrücken']
+      },
+      bizeps: {
+        leicht: ['Wasserflaschen-Curls'],
+        mittel: ['Kurzhantel-Curls'],
+        hart: ['Langhantel-Curls', 'Konzentrationscurls']
+      },
+      trizeps: {
+        leicht: ['Trizeps-Strecken ohne Gewicht'],
+        mittel: ['Dips an Bank', 'Overhead-Extensions'],
+        hart: ['Enges Bankdrücken', 'Trizepsdrücken am Kabelzug']
+      },
+      schultern: {
+        leicht: ['Seitheben ohne Gewicht'],
+        mittel: ['Seitheben mit Kurzhanteln', 'Frontheben'],
+        hart: ['Schulterdrücken', 'Arnold Press', 'Push Press']
+      }
+    }
+
+    return plans[bodypart]?.[intensity] || ['Allgemeines Training']
+  }
+
+  capitalize(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1)
   }
 }
 

@@ -7,7 +7,7 @@
     },
     {
       "name": "Brust",
-      "keywords": ["brust", "brustmuskeln", "pecs"],
+      "keywords": ["brust", "brustmuskeln"],
       "answers": ["Für die Brust eignen sich Bankdrücken, Liegestütze und Kurzhantelfliegen."]
     },
     {
@@ -21,9 +21,24 @@
       "answers": ["Für den Bauch: Planks, Crunches, Leg Raises."]
     },
     {
-      "name": "Schulter",
-      "keywords": ["schulter", "delta", "shoulder"],
-      "answers": ["Für die Schultern eignen sich Seitheben, Schrägbankdrücken und Face-Pulls"]
+      "name": "Schultern",
+      "keywords": ["schultern", "schulter", "deltamuskeln"],
+      "answers": ["Für die Schultern sind Seitheben, Schulterdrücken und Frontheben effektiv."]
+    },
+    {
+      "name": "Arme",
+      "keywords": ["arme", "arm"],
+      "answers": ["Für die Arme kannst du Übungen wie Bizepscurls, Trizepsdrücken oder Dips machen."]
+    },
+    {
+      "name": "Bizeps",
+      "keywords": ["bizeps", "armbeuger", "bizepscurls"],
+      "answers": ["Bizeps trainierst du mit Curls, Hammer Curls und Konzentrationscurls."]
+    },
+    {
+      "name": "Trizeps",
+      "keywords": ["trizeps", "armstrecker", "dips"],
+      "answers": ["Für den Trizeps helfen Dips, Trizepsdrücken und enge Liegestütze."]
     },
     {
       "name": "Trainingsplan",
@@ -34,6 +49,31 @@
       "name": "Fragen",
       "keywords": ["frage", "fragen", "info", "wissen", "antwort"],
       "answers": ["Stell mir gerne deine Frage zum Training."]
+    },
+    {
+      "name": "Ernährung",
+      "keywords": ["ernährung", "essen", "kalorien", "nährstoffe", "diät"],
+      "answers": ["Eine ausgewogene Ernährung unterstützt deine Fitnessziele. Achte auf ausreichend Eiweiß, gesunde Fette und komplexe Kohlenhydrate."]
+    },
+    {
+      "name": "Regeneration",
+      "keywords": ["regeneration", "pause", "ruhetag", "erholung", "muskelkater"],
+      "answers": ["Regeneration ist wichtig für Fortschritt und Verletzungsprävention. Plane regelmäßige Pausen und Schlaf ein."]
+    },
+    {
+      "name": "Cardio",
+      "keywords": ["cardio", "ausdauer", "laufen", "fahrrad", "herz-kreislauf"],
+      "answers": ["Cardio-Training verbessert deine Ausdauer und unterstützt die Herzgesundheit. Ideal sind 2 bis 3 Einheiten pro Woche."]
+    },
+    {
+      "name": "Motivation",
+      "keywords": ["motivation", "disziplin", "ziele", "aufgeben", "dranbleiben"],
+      "answers": ["Setze dir klare Ziele und erinnere dich regelmäßig daran, warum du angefangen hast. Kleine Fortschritte zählen."]
+    },
+    {
+      "name": "Technik",
+      "keywords": ["technik", "ausführung", "bewegung", "haltung", "korrekt"],
+      "answers": ["Eine saubere Technik ist entscheidend, um effektiv zu trainieren und Verletzungen zu vermeiden. Qualität vor Quantität."]
     },
     {
       "name": "Fallback",

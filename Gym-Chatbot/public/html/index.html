@@ -13,12 +13,16 @@
   <script src="/socket.io/socket.io.js"></script>
 </head>
 <body class="bg-funky">
-  <div class="container">
-    <div class="messaging">
-      <div class="inbox_msg">
-        <div class="mesgs">
-          <div id="msg_history" class="msg_history"></div>
-          <div class="type_msg">
+  <div class="text-center my-4"><h1 class="display-4 font-weight-bold text-dark" style="font-family: 'Segoe UI', sans-serif;">
+  🏋️‍♂️ GymGPT 🏋️‍♂️
+</h1>
+</div>
+    <div class="container">
+      <div class="messaging">
+        <div class="inbox_msg">
+          <div class="mesgs">
+            <div id="msg_history" class="msg_history"></div>
+            <div class="type_msg">
             <form id="chatForm" class="input_msg_write">
               <input id="msgInput" type="text" class="write_msg" placeholder="Nachricht eingeben..." autocomplete="off" />
               <button class="msg_send_btn" type="submit"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
@@ -50,7 +54,7 @@
           msgHtml = `
             <div class="incoming_msg">
               <div class="incoming_msg_img">
-                <img src="https://ptetutorials.com/images/user-profile.png" alt="${sender}">
+                <img src="https://builtforathletes.com/cdn/shop/articles/Ronnie_Coleman.jpg?v=1589441229" alt="${sender}">
               </div>
               <div class="received_msg">
                 <div class="received_withd_msg">
