@@ -7,7 +7,7 @@
     },
     {
       "name": "Brust",
-      "keywords": ["brust", "brustmuskeln"],
+      "keywords": ["brust", "brustmuskeln", "pecs"],
       "answers": ["Für die Brust eignen sich Bankdrücken, Liegestütze und Kurzhantelfliegen."]
     },
     {
@@ -19,6 +19,11 @@
       "name": "Bauch",
       "keywords": ["bauch", "core", "sixpack"],
       "answers": ["Für den Bauch: Planks, Crunches, Leg Raises."]
+    },
+    {
+      "name": "Schulter",
+      "keywords": ["schulter", "delta", "shoulder"],
+      "answers": ["Für die Schultern eignen sich Seitheben, Schrägbankdrücken und Face-Pulls"]
     },
     {
       "name": "Trainingsplan",
