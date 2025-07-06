@@ -87,8 +87,7 @@ io.on('connection', (socket) => {
 
 const port = process.env.PORT || 8081;
 server.listen(port, () => {
-  console.log(`Server läuft auf Port ${port}`);
-  console.error(`Fehlerbeispiel: Server hat gestartet.`);  
+  console.log(`Server läuft auf Port ${port}`); 
 });
 
 
